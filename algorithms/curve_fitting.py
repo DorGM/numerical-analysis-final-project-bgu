@@ -248,9 +248,6 @@ class Assignment4A:
 
 
 import unittest
-from sampleFunctions import *
-from tqdm import tqdm
-import random
 
 
 class TestAssignment4(unittest.TestCase):
@@ -311,6 +308,8 @@ class TestAssignment4(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    from sampleFunctions import *
+    from tqdm import tqdm
     unittest.main()
 
 

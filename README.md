@@ -1,188 +1,145 @@
-# 📘 Numerical Analysis – Final Project  
-**Ben-Gurion University of the Negev (BGU)**  
-**Student: Dor Meir**
+# Numerical Analysis Algorithms in Python
 
-This repository contains my full implementation for the final project in the **Numerical Analysis** course.  
-The project includes **five programming assignments**, each focusing on a core topic in numerical computation, interpolation, approximation, or integration.  
+From-scratch implementations of classical numerical methods, originally written as the final project for the **Numerical Analysis** course at Ben-Gurion University of the Negev (BGU).
 
-All methods were implemented **from scratch**, using only Python’s basic capabilities — without numerical libraries such as NumPy, SciPy, or SymPy — in order to demonstrate a deep understanding of numerical algorithms and their mathematical foundations.
+The repository is organized so the five assignment modules can be imported independently. The numerical algorithms themselves are preserved from the original course submission.
 
----
+## Overview
 
-# 🚀 Project Overview
+This project implements interpolation, root finding, Gaussian quadrature, noisy-curve fitting, and noisy 2D shape reconstruction in Python.
 
-The project is divided into five independent tasks:
+The core numerical methods are implemented directly in the repository rather than delegated to high-level numerical solvers. NumPy is used primarily for array representation, numerical primitives, and vectorized arithmetic.
 
-1. **Function interpolation using Bézier splines**  
-2. **Finding multiple intersection points between two functions**  
-3. **Gaussian Quadrature integration & area between curves**  
-4. **Denoising a function and curve fitting**  
-5. **Fitting a noisy 2D shape and computing its area**
+## Key Technical Highlights
 
-Each task has its own file in the repository, with clean separation of logic and helper functions.
+- Cubic Bézier interpolation with a manually implemented Thomas / TDMA tridiagonal solver
+- Multiple-intersection detection using interval scanning and Regula Falsi
+- Gaussian quadrature with explicitly coded nodes and weights, under a function-evaluation budget
+- Repeated sampling and averaging to denoise a callable, then Bézier-based curve fitting
+- Polar-angle contour reconstruction from noisy 2D samples, with shoelace area
+- Course constraints encoded in the original APIs, including evaluation-budget arguments such as `n`
 
-The final submitted report is also included as `numerical_analysis_final_report.pdf`.
+## Algorithms Implemented
 
----
+### 1. Cubic Bézier interpolation — `Assignment1.interpolate`
 
-# 📁 Repository Structure
+Samples a callable on `[a, b]` with at most `n` evaluations, builds piecewise cubic Bézier segments, and solves a tridiagonal system (Thomas / TDMA) for the control points. Evaluating the interpolant uses a Regula Falsi helper to recover the Bézier parameter `t` for a given `x`.
 
+### 2. Multiple intersections — `Assignment2.intersections`
+
+Scans `[a, b]` for sign changes (and nearby near-flat candidates), then applies Regula Falsi on each bracket. Nearby candidate roots are filtered and deduplicated before the method returns an iterable of approximate intersection abscissae.
+
+### 3. Gaussian quadrature and area between curves — `Assignment3`
+
+`integrate(f, a, b, n)` composes 1-, 2-, 3-, 6-, and 10-point Gaussian rules whose nodes and weights are written out in the source. The composition is chosen so that `f` is not evaluated more than `n` times, matching the original assignment constraint.
+
+`areabetween(f1, f2)` locates intersections on the hard-coded interval `[1, 100]`, then integrates `|f1 - f2|` between consecutive roots. If fewer than two intersections are found, the implementation returns `0.0` as `float32` rather than NaN.
+
+### 4. Noisy curve fitting — `Assignment4A.fit`
+
+Repeatedly samples a noisy callable, averages the samples, and fits a cubic Bézier interpolant with the same TDMA control-point construction used in Assignment 1.
+
+The original signature includes `d` (expected polynomial degree) and `maxtime`. Those parameters are accepted for API compatibility with the course tests; the live fitting path does not currently use them.
+
+### 5. Noisy shape reconstruction — `Assignment5`
+
+`fit_shape` draws a large number of noisy contour samples, recenters them, sorts by polar angle, bins and averages points, and returns a shape object. Area is computed with the shoelace formula via NumPy `dot` / `roll`.
+
+`area(contour)` samples a contour callable and applies the same shoelace formula.
+
+The `maxtime` argument is part of the original signature and is not used by the live reconstruction path.
+
+## From-Scratch Numerical Implementations
+
+Implemented directly in this repository:
+
+- Cubic Bézier construction and evaluation
+- Thomas algorithm (TDMA) for tridiagonal control-point systems
+- Regula Falsi, including a scan for multiple roots
+- Gaussian quadrature rules (1, 2, 3, 6, and 10 points) with explicit nodes and weights
+- Composite integration under an evaluation budget
+- Repeated-sample denoising and Bézier curve fitting
+- Polar-angle ordering, binning, and averaging for noisy closed contours
+- Shoelace polygon area
+
+NumPy and the Python standard library are used for:
+
+- arrays and numerical dtypes (`float32`)
+- `linspace` / `arange`
+- vectorized arithmetic
+- `dot` / `roll`
+- scalar math (`math.sqrt`, `math.hypot`, `math.atan2`, …)
+
+They are not used as replacements for SciPy-style interpolation, root-finding, integration, or linear-system solvers.
+
+The original course test helpers `sampleFunctions` and `functionUtils` are not included in this repository. They were provided by the course for grading/demo code and are not required to import or call the algorithm classes.
+
+## Dependencies & Setup
+
+Runtime dependency:
+
+```text
+numpy
 ```
-├── function_interpolation_bezier_splines.py
-├── multiple_intersections_regula_falsi.py
-├── gaussian_quadrature_integration_area_between_curves.py
-├── noisy_curve_fitting_bezier_denoising.py
-├── noisy_shape_fitting_and_polygon_area.py
-├── numerical_analysis_final_report.pdf
-└── README.md
+
+```bash
+pip install -r requirements.txt
 ```
 
-Below is a full explanation of what each file contains.
+Optional historical test/demo dependencies (`tqdm`, `matplotlib`, and the missing course modules above) are not required to use the algorithms.
 
----
-
-# 🧩 **1. Function Interpolation Using Bézier Splines**  
-_File: `function_interpolation_bezier_splines.py`_
-
-This module implements a smooth interpolation of a given continuous function over an interval [a, b] using **cubic Bézier segments**.
-
-### ✔ Key Components
-- Uniform sampling of the function at N+1 points  
-- Construction of piecewise cubic Bézier curves  
-- Solving a **tridiagonal linear system** (Thomas algorithm) to compute the control points  
-- Returning a smooth interpolant that can be evaluated anywhere on [a, b]
-
-### ✔ Core Numerical Topics
-- Bézier representation  
-- Smooth curve stitching  
-- Tridiagonal system solving  
-- Hermite-style constraints
-
----
-
-# 🧮 **2. Finding Multiple Intersections With Regula Falsi**  
-_File: `multiple_intersections_regula_falsi.py`_
-
-This module finds **all intersection points** between two continuous functions f₁(x) and f₂(x) over a given interval.
-
-### ✔ Key Components
-- Scanning the interval and identifying potential sign-change regions  
-- Applying the **Regula Falsi (False Position)** method to approximate each root  
-- Handling:
-  - flat intersections  
-  - repeated intersections  
-  - deduplication of close roots  
-  - tolerance-based filtering
-
-### ✔ Core Numerical Topics
-- Root finding  
-- Sign-change detection  
-- Stability around near-flat intersections
-
----
-
-# 📐 **3. Gaussian Quadrature & Area Between Curves**  
-_File: `gaussian_quadrature_integration_area_between_curves.py`_
-
-This file implements:
-
-### **A. Numeric integration using Gaussian Quadrature**
-Under a **limited function-calls budget**, the integrator chooses among:
-- 1-point,
-- 2-point,
-- 3-point,
-- 6-point,
-- 10-point Gaussian quadrature.
-
-It dynamically selects step sizes and quadrature order to stay within the evaluation budget while maximizing accuracy.
-
-### **B. Area between two curves**
-To compute the area enclosed by f₁(x) and f₂(x):
-
-1. Intersection points are computed using the method from Assignment 2  
-2. The interval is split into monotonic sub-segments  
-3. ∫ |f₁(x) – f₂(x)| dx is evaluated using Gaussian quadrature
-
-### ✔ Core Numerical Topics
-- Approximation of definite integrals  
-- Gaussian Quadrature theory  
-- Error reduction via adaptive partitioning  
-- Composite integration  
-- Handling non-simple shapes
-
----
-
-# 🎯 **4. Denoising & Curve Fitting Using Bézier Splines**  
-_File: `noisy_curve_fitting_bezier_denoising.py`_
-
-This algorithm receives **noisy function values** sampled at random points and fits a smooth approximating curve.
-
-### ✔ Methodology
-1. Sample the noisy function many times  
-2. Average the values to reduce noise  
-3. Fit a smooth curve using the **same Bézier-spline method** from Assignment 1  
-4. Return a callable function representing the denoised curve
-
-### ✔ Core Numerical Topics
-- Noise reduction by resampling  
-- Curve smoothing  
-- Bézier spline reconstruction  
-- Stable interpolation under noise
-
----
-
-# 🔷 **5. Noisy Shape Fitting & Polygon Area**  
-_File: `noisy_shape_fitting_and_polygon_area.py`_
-
-This task deals with noisy samples from a **closed 2D shape**.  
-The goal is to reconstruct the shape and compute its area.
-
-### ✔ Key Components
-- Sampling noisy points along the contour  
-- Recentering and sorting points by polar angle  
-- Grouping points into segments (clustering)  
-- Averaging points per segment to reduce noise  
-- Fitting a cleaned contour  
-- Computing area with the **Shoelace Formula**
-
-### ✔ Core Numerical Topics
-- Geometric denoising  
-- Curve reconstruction from unordered points  
-- Polygon area estimation  
-- Robust clustering and ordering
-
----
-
-# 📄 Final Report
-
-The file `numerical_analysis_final_report.pdf` contains:
-
-- Mathematical derivations  
-- Algorithm explanations  
-- Example results  
-- Full answers submitted as part of the final assignment
-
----
-
-# 🛠 Requirements & Usage
-
-The implementations rely only on:
-
-- Standard Python (no NumPy, SciPy, etc.)
-- Basic math and control structures
-
-To use any of the modules:
+## Usage
 
 ```python
-from function_interpolation_bezier_splines import interpolate
-from gaussian_quadrature_integration_area_between_curves import integrate
+from algorithms.interpolation import Assignment1
+
+ass1 = Assignment1()
+f = ass1.interpolate(lambda x: x, 0, 1, 5)
+print(f(0.5))
 ```
 
-Each file is fully self-contained.
+```python
+from algorithms.gaussian_quadrature import Assignment3
 
----
+ass3 = Assignment3()
+print(ass3.integrate(lambda x: x**2, 0, 1, 10))
+```
 
-# 🙌 Author
+```python
+from algorithms.root_finding import Assignment2
+from algorithms.curve_fitting import Assignment4A
+from algorithms.shape_reconstruction import Assignment5
+
+ass2 = Assignment2()
+print(ass2.intersections(lambda x: x * x - 1, lambda x: 0, -2, 2))
+
+ass4 = Assignment4A()
+fit = ass4.fit(lambda x: x**2, 0, 1, d=2, maxtime=1.0)
+print(fit(0.5))
+
+ass5 = Assignment5()
+```
+
+## Project Structure
+
+```text
+README.md
+requirements.txt
+.gitignore
+algorithms/
+    __init__.py
+    interpolation.py
+    root_finding.py
+    gaussian_quadrature.py
+    curve_fitting.py
+    shape_reconstruction.py
+```
+
+## Academic Context
+
+This code was developed as the final project for the Numerical Analysis course at Ben-Gurion University of the Negev (BGU). Each module corresponds to one programming assignment from that project. Embedded unittest blocks are leftover course/demo tests; they may depend on helper modules that were never part of this repository.
+
+## Author
 
 **Dor Meir**  
 Ben-Gurion University of the Negev (BGU)  

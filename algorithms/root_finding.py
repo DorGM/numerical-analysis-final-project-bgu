@@ -148,73 +148,71 @@ class Assignment2:
 ##########################################################################
 
 
-import unittest
-from sampleFunctions import *
-from tqdm import tqdm
-
-
-class TestAssignment2(unittest.TestCase):
-
-    # def test_sqr(self):
-    #
-    #     ass2 = Assignment2()
-    #
-    #     f1 = np.poly1d([-1, 3, 1])
-    #     f2 = np.poly1d([1, 0, -1])
-    #     for i in range(10):
-    #         X = ass2.intersections(f1, f2, -6, 6)
-    #         # print(X)
-    #         for x in X:
-    #             self.assertGreaterEqual(0.001, abs(f1(x) - f2(x)))
-    #     f1 = lambda x: (x ** 0.5) - 2
-    #     f2 = lambda x: sin(x) + 5
-    #     for i in range(10):
-    #         X = ass2.intersections(f1, f2, 0, 5)
-    #         # print(36.043 - X[0], 36.38 - X[1], 41.438 - X[2], 43.572 - X[3], 47.25 - X[4])
-    #         for x in X:
-    #             self.assertGreaterEqual(0.001, abs(f1(x) - f2(x)))
-    #     f1 = lambda x: log(x)**10
-    #     f2 = lambda x: cos(x**2)
-    #     for i in range(10):
-    #         X = ass2.intersections(f1, f2, -6, 6)
-    #         # print(X)
-    #         for x in X:
-    #             self.assertGreaterEqual(0.001, abs(f1(x) - f2(x)))
-    #     f1 = lambda x: (x**2 * sin(x**2) - 2)**2
-    #     f2 = lambda x: log(x)
-    #
-    #     for i in range(10):
-    #         X = ass2.intersections(f1, f2, -6, 6)
-    #         # print(X)
-    #         for x in X:
-    #             self.assertGreaterEqual(0.001, abs(f1(x) - f2(x)))
-
-
-    def test_poly(self):
-
-        ass2 = Assignment2()
-
-        # f1, f2 = randomIntersectingPolynomials(1000)
-        # f1 = lambda x: x**17 + sin(x**2) + math.log(100 * x**2)
-        # f2 = lambda x: cos(x**2)
-
-        f1 = lambda x: sin(x**2)
-        f2 = lambda x: sin(math.log(x))
-        # f1 = lambda x: cos(x**3)
-        # f2 = lambda x: 0
-        # f1 = np.poly1d([-1, 3, 1])
-        # f2 = np.poly1d([1, 0, -1])
-        # f1 = strong_oscilations()
-        # f2 = lambda x: 0
-        X = ass2.intersections(f1, f2, 1, 4)
-        print(f"test2:{X}")
-
-        for x in X:
-            self.assertGreaterEqual(0.001, abs(f1(x) - f2(x)))
-
-
-
 if __name__ == "__main__":
+    import unittest
+    from sampleFunctions import *
+    from tqdm import tqdm
+
+
+    class TestAssignment2(unittest.TestCase):
+
+        # def test_sqr(self):
+        #
+        #     ass2 = Assignment2()
+        #
+        #     f1 = np.poly1d([-1, 3, 1])
+        #     f2 = np.poly1d([1, 0, -1])
+        #     for i in range(10):
+        #         X = ass2.intersections(f1, f2, -6, 6)
+        #         # print(X)
+        #         for x in X:
+        #             self.assertGreaterEqual(0.001, abs(f1(x) - f2(x)))
+        #     f1 = lambda x: (x ** 0.5) - 2
+        #     f2 = lambda x: sin(x) + 5
+        #     for i in range(10):
+        #         X = ass2.intersections(f1, f2, 0, 5)
+        #         # print(36.043 - X[0], 36.38 - X[1], 41.438 - X[2], 43.572 - X[3], 47.25 - X[4])
+        #         for x in X:
+        #             self.assertGreaterEqual(0.001, abs(f1(x) - f2(x)))
+        #     f1 = lambda x: log(x)**10
+        #     f2 = lambda x: cos(x**2)
+        #     for i in range(10):
+        #         X = ass2.intersections(f1, f2, -6, 6)
+        #         # print(X)
+        #         for x in X:
+        #             self.assertGreaterEqual(0.001, abs(f1(x) - f2(x)))
+        #     f1 = lambda x: (x**2 * sin(x**2) - 2)**2
+        #     f2 = lambda x: log(x)
+        #
+        #     for i in range(10):
+        #         X = ass2.intersections(f1, f2, -6, 6)
+        #         # print(X)
+        #         for x in X:
+        #             self.assertGreaterEqual(0.001, abs(f1(x) - f2(x)))
+
+
+        def test_poly(self):
+
+            ass2 = Assignment2()
+
+            # f1, f2 = randomIntersectingPolynomials(1000)
+            # f1 = lambda x: x**17 + sin(x**2) + math.log(100 * x**2)
+            # f2 = lambda x: cos(x**2)
+
+            f1 = lambda x: sin(x**2)
+            f2 = lambda x: sin(math.log(x))
+            # f1 = lambda x: cos(x**3)
+            # f2 = lambda x: 0
+            # f1 = np.poly1d([-1, 3, 1])
+            # f2 = np.poly1d([1, 0, -1])
+            # f1 = strong_oscilations()
+            # f2 = lambda x: 0
+            X = ass2.intersections(f1, f2, 1, 4)
+            print(f"test2:{X}")
+
+            for x in X:
+                self.assertGreaterEqual(0.001, abs(f1(x) - f2(x)))
+
     unittest.main()
 
 # print(TestAssignment2.test_sqrt())

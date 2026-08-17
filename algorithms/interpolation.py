@@ -5,7 +5,6 @@ In this assignment you should interpolate the given function.
 import numpy
 import time
 import random
-import matplotlib.pyplot as plt
 import numpy as np
 import math
 from numpy import cos, sin, tan, arctan, log, e
@@ -182,90 +181,89 @@ class Assignment1:
 ##########################################################################
 
 
-import unittest
-from functionUtils import *
-from tqdm import tqdm
-
-
-class TestAssignment1(unittest.TestCase):
-
-    def test_with_poly(self):
-        T = time.time()
-
-        ass1 = Assignment1()
-        mean_err = 0
-
-        d = 30
-        for i in tqdm(range(100)):
-            a = np.random.randn(d)
-
-            f = np.poly1d(a)
-            # f = lambda x: math.log(math.log(x, 10), 10)
-            # f = lambda x: math.log(math.log(x, 10), 10)
-            # f = lambda x: cos(x ** 2) - x ** 7 + tan(x ** 5)
-            # f = lambda x: x**sin(x**2) + e**x - cos(x**3)
-            # f = lambda x: math.log(x, math.e)
-            # f = lambda x: math.sin(x)
-            ff = ass1.interpolate(f, -10, 10, 5)
-            # n = [1, 10, 25, 50, 100, 200, 500, 1000]
-            # xs = np.linspace(-9.9, 9.9, 200)
-            # xs = np.random.random(200)
-            # xs = np.random.uniform(low=5, high=10, size=200)
-            xs = [-10, 10]
-            err = 0
-            for x in xs:
-                yy = ff(x)
-                y = f(x)
-                err += abs(y - yy)
-
-            err = err / 200
-            mean_err += err
-        mean_err = mean_err / 100
-
-        T = time.time() - T
-        print(T)
-        print(mean_err)
-    #
-    # def test_with_poly_restrict(self):
-    #     ass1 = Assignment1()
-    #     a = np.random.randn(5)
-    #     f = RESTRICT_INVOCATIONS(10)(np.poly1d(a))
-    #     ff = ass1.interpolate(f, -10, 10, 10)
-    #     xs = np.random.random(20)
-    #     for x in xs:
-    #         yy = ff(x)
-
-    # def test_with_poly(self):
-    #     T = time.time()
-    #
-    #     ass1 = Assignment1()
-    #     mean_err = 0
-    #
-    #     d = 2
-    #     for i in tqdm(range(100)):
-    #         a = np.random.randn(d)
-    #
-    #         f = np.poly1d(a)
-    #
-    #         ff = ass1.interpolate(f, -10, 10, 100)
-    #
-    #         xs = np.random.random(200)
-    #         err = 0
-    #         for x in xs:
-    #             yy = ff(x)
-    #             y = f(x)
-    #             err += abs(y - yy)
-    #
-    #         err = err / 200
-    #         mean_err += err
-    #     mean_err = mean_err / 100
-    #
-    #     T = time.time() - T
-    #     print(T)
-    #     print(mean_err)
-
-
 if __name__ == "__main__":
+    import unittest
+    from functionUtils import *
+    from tqdm import tqdm
+
+
+    class TestAssignment1(unittest.TestCase):
+
+        def test_with_poly(self):
+            T = time.time()
+
+            ass1 = Assignment1()
+            mean_err = 0
+
+            d = 30
+            for i in tqdm(range(100)):
+                a = np.random.randn(d)
+
+                f = np.poly1d(a)
+                # f = lambda x: math.log(math.log(x, 10), 10)
+                # f = lambda x: math.log(math.log(x, 10), 10)
+                # f = lambda x: cos(x ** 2) - x ** 7 + tan(x ** 5)
+                # f = lambda x: x**sin(x**2) + e**x - cos(x**3)
+                # f = lambda x: math.log(x, math.e)
+                # f = lambda x: math.sin(x)
+                ff = ass1.interpolate(f, -10, 10, 5)
+                # n = [1, 10, 25, 50, 100, 200, 500, 1000]
+                # xs = np.linspace(-9.9, 9.9, 200)
+                # xs = np.random.random(200)
+                # xs = np.random.uniform(low=5, high=10, size=200)
+                xs = [-10, 10]
+                err = 0
+                for x in xs:
+                    yy = ff(x)
+                    y = f(x)
+                    err += abs(y - yy)
+
+                err = err / 200
+                mean_err += err
+            mean_err = mean_err / 100
+
+            T = time.time() - T
+            print(T)
+            print(mean_err)
+        #
+        # def test_with_poly_restrict(self):
+        #     ass1 = Assignment1()
+        #     a = np.random.randn(5)
+        #     f = RESTRICT_INVOCATIONS(10)(np.poly1d(a))
+        #     ff = ass1.interpolate(f, -10, 10, 10)
+        #     xs = np.random.random(20)
+        #     for x in xs:
+        #         yy = ff(x)
+
+        # def test_with_poly(self):
+        #     T = time.time()
+        #
+        #     ass1 = Assignment1()
+        #     mean_err = 0
+        #
+        #     d = 2
+        #     for i in tqdm(range(100)):
+        #         a = np.random.randn(d)
+        #
+        #         f = np.poly1d(a)
+        #
+        #         ff = ass1.interpolate(f, -10, 10, 100)
+        #
+        #         xs = np.random.random(200)
+        #         err = 0
+        #         for x in xs:
+        #             yy = ff(x)
+        #             y = f(x)
+        #             err += abs(y - yy)
+        #
+        #         err = err / 200
+        #         mean_err += err
+        #     mean_err = mean_err / 100
+        #
+        #     T = time.time() - T
+        #     print(T)
+        #     print(mean_err)
+
     unittest.main()
 
 

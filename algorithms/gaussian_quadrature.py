@@ -88,14 +88,15 @@ def intersections(f1: callable, f2: callable, a: float, b: float, maxerr=0.001):
 
 
 def getGaussParams(num):
+    # math.sqrt is a NumPy 2.x compatibility replacement for numpy.math.sqrt.
     if num == 1:
         X = numpy.array([1])
         A = numpy.array([2])
     elif num == 2:
-        X = numpy.array([numpy.math.sqrt(1 / 3), -numpy.math.sqrt(1 / 3)])
+        X = numpy.array([math.sqrt(1 / 3), -math.sqrt(1 / 3)])
         A = numpy.array([1, 1])
     elif num == 3:
-        X = numpy.array([numpy.math.sqrt(3 / 5), -numpy.math.sqrt(3 / 5), 0])
+        X = numpy.array([math.sqrt(3 / 5), -math.sqrt(3 / 5), 0])
         A = numpy.array([5 / 9, 5 / 9, 8 / 9])
     elif num == 6:
         X = numpy.array(
@@ -231,9 +232,6 @@ class Assignment3:
 
 
 import unittest
-from sampleFunctions import *
-from tqdm import tqdm
-from functionUtils import *
 
 
 class TestAssignment3(unittest.TestCase):
@@ -445,5 +443,8 @@ class TestAssignment3(unittest.TestCase):
         self.assertGreaterEqual(0.001, abs((r - true_result) / true_result))
 
 if __name__ == "__main__":
+    from sampleFunctions import *
+    from tqdm import tqdm
+    from functionUtils import *
     unittest.main()
 

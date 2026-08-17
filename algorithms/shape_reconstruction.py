@@ -23,7 +23,18 @@ import numpy as np
 import math
 import time
 import random
-from functionUtils import AbstractShape
+try:
+    from functionUtils import AbstractShape
+except ImportError:
+    class AbstractShape:
+        def area(self):
+            pass
+
+        def contour(self, n: int):
+            pass
+
+        def sample(self, n: int):
+            pass
 
 
 class Assignment5:
@@ -155,56 +166,55 @@ class Assignment5:
 ##########################################################################
 
 
-import unittest
-from sampleFunctions import *
-from tqdm import tqdm
-
-
-class TestAssignment5(unittest.TestCase):
-
-    def test_return(self):
-        circ = noisy_circle(cx=1, cy=1, radius=1, noise=0.1)
-        ass5 = Assignment5()
-        T = time.time()
-        shape = ass5.fit_shape(sample=circ, maxtime=5)
-        T = time.time() - T
-        self.assertTrue(isinstance(shape, AbstractShape))
-        self.assertLessEqual(T, 5)
-
-    # def test_delay(self):
-    #     circ = noisy_circle(cx=1, cy=1, radius=1, noise=0.1)
-    #
-    #     def sample():
-    #         time.sleep(7)
-    #         return circ()
-    #
-    #     ass5 = Assignment5()
-    #     T = time.time()
-    #     shape = ass5.fit_shape(sample=sample, maxtime=5)
-    #     T = time.time() - T
-    #     self.assertTrue(isinstance(shape, AbstractShape))
-    #     self.assertGreaterEqual(T, 5)
-
-    def test_circle_area(self):
-        circ = noisy_circle(cx=1, cy=1, radius=1, noise=0.1)
-        ass5 = Assignment5()
-        T = time.time()
-        shape = ass5.fit_shape(sample=circ, maxtime=30)
-        T = time.time() - T
-        a = shape.area()
-        self.assertLess(abs(a - np.pi), 0.01)
-        self.assertLessEqual(T, 32)
-
-    def test_bezier_fit(self):
-        circ = noisy_circle(cx=1, cy=1, radius=1, noise=0.1)
-        ass5 = Assignment5()
-        T = time.time()
-        shape = ass5.fit_shape(sample=circ, maxtime=30)
-        T = time.time() - T
-        a = shape.area()
-        self.assertLess(abs(a - np.pi), 0.01)
-        self.assertLessEqual(T, 32)
-
-
 if __name__ == "__main__":
+    import unittest
+    from sampleFunctions import *
+    from tqdm import tqdm
+
+
+    class TestAssignment5(unittest.TestCase):
+
+        def test_return(self):
+            circ = noisy_circle(cx=1, cy=1, radius=1, noise=0.1)
+            ass5 = Assignment5()
+            T = time.time()
+            shape = ass5.fit_shape(sample=circ, maxtime=5)
+            T = time.time() - T
+            self.assertTrue(isinstance(shape, AbstractShape))
+            self.assertLessEqual(T, 5)
+
+        # def test_delay(self):
+        #     circ = noisy_circle(cx=1, cy=1, radius=1, noise=0.1)
+        #
+        #     def sample():
+        #         time.sleep(7)
+        #         return circ()
+        #
+        #     ass5 = Assignment5()
+        #     T = time.time()
+        #     shape = ass5.fit_shape(sample=sample, maxtime=5)
+        #     T = time.time() - T
+        #     self.assertTrue(isinstance(shape, AbstractShape))
+        #     self.assertGreaterEqual(T, 5)
+
+        def test_circle_area(self):
+            circ = noisy_circle(cx=1, cy=1, radius=1, noise=0.1)
+            ass5 = Assignment5()
+            T = time.time()
+            shape = ass5.fit_shape(sample=circ, maxtime=30)
+            T = time.time() - T
+            a = shape.area()
+            self.assertLess(abs(a - np.pi), 0.01)
+            self.assertLessEqual(T, 32)
+
+        def test_bezier_fit(self):
+            circ = noisy_circle(cx=1, cy=1, radius=1, noise=0.1)
+            ass5 = Assignment5()
+            T = time.time()
+            shape = ass5.fit_shape(sample=circ, maxtime=30)
+            T = time.time() - T
+            a = shape.area()
+            self.assertLess(abs(a - np.pi), 0.01)
+            self.assertLessEqual(T, 32)
+
     unittest.main()
