@@ -1,14 +1,16 @@
 # Numerical Analysis Algorithms in Python
 
-From-scratch implementations of classical numerical methods, originally written as the final project for the **Numerical Analysis** course at Ben-Gurion University of the Negev (BGU).
+A collection of numerical-analysis algorithms I implemented from scratch in Python, covering interpolation, root finding, Gaussian quadrature, noisy-curve fitting, and 2D shape reconstruction.
 
-The repository is organized so the five assignment modules can be imported independently. The numerical algorithms themselves are preserved from the original course submission.
+The core numerical methods are implemented directly rather than delegated to high-level numerical solvers. NumPy is used primarily for arrays, numerical primitives, and vectorized arithmetic.
+
+The five modules can be imported independently.
 
 ## Overview
 
 This project implements interpolation, root finding, Gaussian quadrature, noisy-curve fitting, and noisy 2D shape reconstruction in Python.
 
-The core numerical methods are implemented directly in the repository rather than delegated to high-level numerical solvers. NumPy is used primarily for array representation, numerical primitives, and vectorized arithmetic.
+I implemented the core numerical algorithms from scratch. The methods live directly in this repository rather than being delegated to high-level numerical solvers. NumPy is used for low-level numerical primitives rather than as a replacement for the algorithms.
 
 ## Key Technical Highlights
 
@@ -17,7 +19,7 @@ The core numerical methods are implemented directly in the repository rather tha
 - Gaussian quadrature with explicitly coded nodes and weights, under a function-evaluation budget
 - Repeated sampling and averaging to denoise a callable, then Bézier-based curve fitting
 - Polar-angle contour reconstruction from noisy 2D samples, with shoelace area
-- Course constraints encoded in the original APIs, including evaluation-budget arguments such as `n`
+- Evaluation-budget arguments such as `n` in the public APIs
 
 ## Algorithms Implemented
 
@@ -31,7 +33,7 @@ Scans `[a, b]` for sign changes (and nearby near-flat candidates), then applies 
 
 ### 3. Gaussian quadrature and area between curves — `Assignment3`
 
-`integrate(f, a, b, n)` composes 1-, 2-, 3-, 6-, and 10-point Gaussian rules whose nodes and weights are written out in the source. The composition is chosen so that `f` is not evaluated more than `n` times, matching the original assignment constraint.
+`integrate(f, a, b, n)` composes 1-, 2-, 3-, 6-, and 10-point Gaussian rules whose nodes and weights are written out in the source. The composition is chosen so that `f` is not evaluated more than `n` times.
 
 `areabetween(f1, f2)` locates intersections on the hard-coded interval `[1, 100]`, then integrates `|f1 - f2|` between consecutive roots. If fewer than two intersections are found, the implementation returns `0.0` as `float32` rather than NaN.
 
@@ -39,7 +41,7 @@ Scans `[a, b]` for sign changes (and nearby near-flat candidates), then applies 
 
 Repeatedly samples a noisy callable, averages the samples, and fits a cubic Bézier interpolant with the same TDMA control-point construction used in Assignment 1.
 
-The original signature includes `d` (expected polynomial degree) and `maxtime`. Those parameters are accepted for API compatibility with the course tests; the live fitting path does not currently use them.
+The method signature includes `d` (expected polynomial degree) and `maxtime`. Those parameters are accepted for API compatibility; the live fitting path does not currently use them.
 
 ### 5. Noisy shape reconstruction — `Assignment5`
 
@@ -47,11 +49,11 @@ The original signature includes `d` (expected polynomial degree) and `maxtime`. 
 
 `area(contour)` samples a contour callable and applies the same shoelace formula.
 
-The `maxtime` argument is part of the original signature and is not used by the live reconstruction path.
+The `maxtime` argument is part of the method signature and is not used by the live reconstruction path.
 
 ## From-Scratch Numerical Implementations
 
-Implemented directly in this repository:
+I implemented the core numerical algorithms from scratch. The following methods are implemented directly in this repository:
 
 - Cubic Bézier construction and evaluation
 - Thomas algorithm (TDMA) for tridiagonal control-point systems
@@ -70,9 +72,9 @@ NumPy and the Python standard library are used for:
 - `dot` / `roll`
 - scalar math (`math.sqrt`, `math.hypot`, `math.atan2`, …)
 
-They are not used as replacements for SciPy-style interpolation, root-finding, integration, or linear-system solvers.
+They are not used as replacements for SciPy-style interpolation, root-finding, integration, or linear-system solvers. NumPy is used for low-level numerical primitives rather than as a replacement for the algorithms.
 
-The original course test helpers `sampleFunctions` and `functionUtils` are not included in this repository. They were provided by the course for grading/demo code and are not required to import or call the algorithm classes.
+The original project’s embedded test/demo code references `sampleFunctions` and `functionUtils`, which are not included in this repository. They are relevant only to that old test/demo code and are not required to import or call the core algorithm modules.
 
 ## Dependencies & Setup
 
@@ -86,7 +88,7 @@ numpy
 pip install -r requirements.txt
 ```
 
-Optional historical test/demo dependencies (`tqdm`, `matplotlib`, and the missing course modules above) are not required to use the algorithms.
+Optional historical test/demo dependencies (`tqdm`, `matplotlib`, and the helper modules referenced above) are not required to use the algorithms.
 
 ## Usage
 
@@ -135,9 +137,9 @@ algorithms/
     shape_reconstruction.py
 ```
 
-## Academic Context
+## Background
 
-This code was developed as the final project for the Numerical Analysis course at Ben-Gurion University of the Negev (BGU). Each module corresponds to one programming assignment from that project. Embedded unittest blocks are leftover course/demo tests; they may depend on helper modules that were never part of this repository.
+This project was developed while studying Numerical Analysis at Ben-Gurion University of the Negev (BGU). The five modules originated from numerical-analysis programming tasks covering interpolation, root finding, quadrature, curve fitting, and shape reconstruction.
 
 ## Author
 
